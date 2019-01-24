@@ -2,13 +2,13 @@ var puzzle;
 var space;
 var level = 0;
 var picture = [
-	['第一關　魯夫(04 X 04)', 'LV-1.jpg'],
-	['第二關　索隆(05 X 05)', 'LV-2.jpg'],
-	['第三關　娜美(06 X 06)', 'LV-3.jpg'],
-	['第四關　騙人布(07 X 07)', 'LV-4.jpg'],
-	['第五關　香吉士(08 X 08)', 'LV-5.jpg'],
-	['第六關　喬巴(09 X 09)', 'LV-6.jpg'],
-	['第七關　羅賓(10 X 10)', 'LV-7.jpg']
+	['第一關(魯夫)', 'LV-1.jpg'],
+	['第二關(索隆)', 'LV-2.jpg'],
+	['第三關(娜美)', 'LV-3.jpg'],
+	['第四關(騙人布)', 'LV-4.jpg'],
+	['第五關(香吉士)', 'LV-5.jpg'],
+	['第六關(喬巴)', 'LV-6.jpg'],
+	['第七關(羅賓)', 'LV-7.jpg']
 ];
 
 $(document).ready(function() {
@@ -22,11 +22,13 @@ $(document).ready(function() {
 			showSelect();
 			draw();
 			if (checkWin()) {
-				level = level + 1 == picture.length ? 0 : level + 1;
-				makePuzzle();
-				showSelect();
-				alert('you win!');
-				draw();
+				setTimeout(() => {
+					level = level + 1 == picture.length ? 0 : level + 1;
+					makePuzzle();
+					showSelect();
+					alert('you win!');
+					draw();
+				}, 50);
 			}
 		}
 	});
@@ -46,6 +48,7 @@ function makePuzzle() {
 	puzzle[level + 3][level + 3] = 0;
 	space = [level + 3, level + 3];
 
+	/*
 	for (var i = 0; i < level + 4; i++) {
 		for (var j = 0; j < level + 4; j++) {
 			if (i != level + 2 && j != level + 2) {
@@ -62,19 +65,11 @@ function makePuzzle() {
 			}
 		}
 	}
+	*/
 }
 
 function showSelect() {
-	var html = '';
-	html += '<center>';
-	html += '<select name=pizzle>';
-	for (var i = 0 ; i < picture.length ; i++) {
-		html += '<option value=' + i + '>' + picture[i][0] + '</option>';
-	}
-	html += '</select>';
-	html += '</center>';
-	$('body').html(html);
-	$('select[name=pizzle]').val(level).attr('disabled', true);
+	$('#level').html(picture[level][0]);
 }
 
 function checkWin() {
@@ -129,32 +124,78 @@ function changePuzzle(keyCode) {
 	}
 }
 
+function clickBlock(x, y) {
+	var changed = false;
+	if (space[0] == x) {
+		if (space[1] == y - 1 || space[1] == y + 1) {
+			puzzle[space[0]][space[1]] = puzzle[x][y];
+			space[1] = y;
+			puzzle[x][y] = 0;
+			changed = true;
+		}
+	} else if (space[1] == y) {
+		if (space[0] == x - 1 || space[0] == x + 1) {
+			puzzle[space[0]][space[1]] = puzzle[x][y];
+			space[0] = x;
+			puzzle[x][y] = 0;
+			changed = true;
+		}
+	}
+	if (changed) {
+		showSelect();
+		draw();
+		if (checkWin()) {
+			setTimeout(() => {
+				level = level + 1 == picture.length ? 0 : level + 1;
+				makePuzzle();
+				showSelect();
+				alert('you win!');
+				draw();
+			}, 50);
+		}
+	}
+}
+
 function draw() {
 	var html = '';
 	html += '<center>';
-	html += '<table>';
+	html += '<table class="table">';
 	for (var i = 0 ; i < puzzle.length ; i++) {
 		html += '<tr>';
 		for (var j = 0 ; j < puzzle[i].length ; j++) {
-			html += '<td style="' + getStytle(puzzle[i][j]) + '"></td>';
+			html += '<td style="' + getStytle(level + 4, puzzle[i][j]) + '" onclick="clickBlock('+ i + ', ' + j + ')"></td>';
 		}
 		html += '</tr>';
 	}
 	html += '</table>';
 	html += '</center>';
-	$('body').append(html);
+	$('mcj-pizzle').html(html);
+	$('mcj-pizzle').find('td').hover(event => {
+		$(event.currentTarget).css('filter', 'opacity(0.5)');
+	}, event => {
+		$(event.currentTarget).css('filter', 'none');
+	});
 }
 
-function getStytle(id) {
+function getStytle(size, id) {
+
+	var screenW = document.body.clientWidth;
+	var screenH = document.body.clientHeight;
+
+	var w = screenW < screenH ? screenW : screenH;
+	var c = w / size;
+
 	var style = '';
 	if (id != 0) {
 		var x = (id - 1) % puzzle.length;
 		var y = Math.floor((id - 1) / puzzle.length);
 		style += 'background-color: #000000;';
-		style += 'width: 30px;';
-		style += 'height: 30px;';
+		style += 'width: ' + c + 'px;';
+		style += 'height: ' + c + 'px;';
 		style += 'background-image:URL(pic/' + picture[level][1] + ');';
-		style += 'background-position: -' + x * 30 + 'px -' + y * 30 + 'px;';
+		style += 'background-size: ' + (c * size) + 'px ' + (c * size) + 'px;';
+		style += 'background-position: -' + x * c + 'px -' + y * c + 'px;';
+		style += 'border: 5px solid white;';
 	}
 	
 	return style;
