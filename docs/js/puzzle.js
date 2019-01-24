@@ -45,7 +45,7 @@ function makePuzzle() {
 	}
 	puzzle[level + 3][level + 3] = 0;
 	space = [level + 3, level + 3];
-	
+
 	for (var i = 0; i < level + 4; i++) {
 		for (var j = 0; j < level + 4; j++) {
 			if (i != level + 2 && j != level + 2) {
@@ -56,6 +56,9 @@ function makePuzzle() {
 				
 				puzzle[i][j] = puzzle[x][y];
 				puzzle[x][y] = temp;
+				if (i == space[0] && j == space[1]) {
+					space = [x, y];
+				}
 			}
 		}
 	}
