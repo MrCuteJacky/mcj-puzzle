@@ -10,6 +10,7 @@ var picture = [
 	['第六關(喬巴)', 'LV-6.jpg'],
 	['第七關(羅賓)', 'LV-7.jpg']
 ];
+var doRandom = true;
 
 $(document).ready(function() {
 	makePuzzle();
@@ -48,24 +49,24 @@ function makePuzzle() {
 	puzzle[level + 3][level + 3] = 0;
 	space = [level + 3, level + 3];
 
-	/*
-	for (var i = 0; i < level + 4; i++) {
-		for (var j = 0; j < level + 4; j++) {
-			if (i != level + 2 && j != level + 2) {
-				var x = Math.floor(Math.random() * (level + 2));
-				var y = Math.floor(Math.random() * (level + 2));
-				
-				var temp = puzzle[i][j];
-				
-				puzzle[i][j] = puzzle[x][y];
-				puzzle[x][y] = temp;
-				if (i == space[0] && j == space[1]) {
-					space = [x, y];
+	if (doRandom) {
+		for (var i = 0; i < level + 4; i++) {
+			for (var j = 0; j < level + 4; j++) {
+				if (i != level + 2 && j != level + 2) {
+					var x = Math.floor(Math.random() * (level + 2));
+					var y = Math.floor(Math.random() * (level + 2));
+					
+					var temp = puzzle[i][j];
+					
+					puzzle[i][j] = puzzle[x][y];
+					puzzle[x][y] = temp;
+					if (i == space[0] && j == space[1]) {
+						space = [x, y];
+					}
 				}
 			}
 		}
 	}
-	*/
 }
 
 function showSelect() {
@@ -159,7 +160,7 @@ function clickBlock(x, y) {
 function draw() {
 	var html = '';
 	html += '<center>';
-	html += '<table class="table">';
+	html += '<table>';
 	for (var i = 0 ; i < puzzle.length ; i++) {
 		html += '<tr>';
 		for (var j = 0 ; j < puzzle[i].length ; j++) {
@@ -179,10 +180,7 @@ function draw() {
 
 function getStytle(size, id) {
 
-	var screenW = document.body.clientWidth;
-	var screenH = document.body.clientHeight;
-
-	var w = screenW < screenH ? screenW : screenH;
+	var w = document.body.clientWidth;
 	var c = w / size;
 
 	var style = '';
