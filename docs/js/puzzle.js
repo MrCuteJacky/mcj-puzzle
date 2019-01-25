@@ -171,8 +171,9 @@ function draw() {
 
 function getStytle(size, id) {
 
-	var w = document.body.clientWidth;
-	var c = w / size;
+	var w = $('#content').width();
+	var h = $('#content').height();
+	var c = (w > h ? h : w) / size;
 
 	var style = '';
 	var x = (id - 1) % puzzle.length;
