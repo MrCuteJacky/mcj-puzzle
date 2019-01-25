@@ -1,6 +1,6 @@
 var puzzle;
 var level = 0;
-var doRandom = false;
+var doRandom = true;
 
 var games = [
 	{title: 'MCJ', path: '01.png', size: 3},
