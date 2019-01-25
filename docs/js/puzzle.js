@@ -169,11 +169,11 @@ function draw() {
 	});
 }
 
+var w = $('#content').width();
+var h = $('#content').height();
+var m = (w > h ? h : w);
 function getStytle(size, id) {
-
-	var w = $('#content').width();
-	var h = $('#content').height();
-	var c = (w > h ? h : w) / size;
+	var c = m / size;
 
 	var style = '';
 	var x = (id - 1) % puzzle.length;
