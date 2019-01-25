@@ -84,7 +84,6 @@ function checkWin() {
 			level = level + 1 == games.length ? 0 : level + 1;
 			makePuzzle();
 			showSelect();
-			// alert('you win!');
 			$('#toast').toast('show');
 			draw();
 		}, 50);
